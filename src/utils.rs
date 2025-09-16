@@ -307,7 +307,6 @@ pub fn parse_float(input: &[u8]) -> (bool, bool, f64) {
     }
     pos += n_zeros;
     let mut significand = 0;
-    let mut decimal_point: i64 = 0;
     let mut n_digits = 0;
     // parse integer part
     for byte in &input[pos..] {
@@ -324,6 +323,7 @@ pub fn parse_float(input: &[u8]) -> (bool, bool, f64) {
         break;
     }
     pos += n_digits;
+    let mut decimal_point: i64 = 0;
     for byte in &input[pos..] {
         if !byte.is_ascii_digit() {
             break;
@@ -474,8 +474,8 @@ pub fn upper_to_lower(buf: &mut [u8]) {
 #[derive(Eq)]
 pub struct CaseInsensitiveBytes<'a>(&'a [u8]);
 
-impl CaseInsensitiveBytes {
-    /// Compare with lower case bytes.
+impl CaseInsensitiveBytes<'_> {
+    /// Compare with lowercase bytes.
     pub fn equal_to_lower_bytes(&self, other: &[u8]) -> bool {
         if self.0.len() != other.len() {
             return false;
@@ -529,7 +529,7 @@ impl<'a> From<&'a [u8]> for CaseInsensitiveBytes<'a> {
 }
 
 impl<'a> From<&'a Vec<u8>> for CaseInsensitiveBytes<'a> {
-    fn from(value: &'a [u8]) -> Self {
+    fn from(value: &'a Vec<u8>) -> Self {
         Self(&value[..])
     }
 }
@@ -595,7 +595,7 @@ impl MaybeQuotedBytes<'_> {
                 let mut iter = self.0[1..self.0.len()-1].iter();
                 while let Some(&byte) = iter.next() {
                     // Some formats escape characters by doubling them.
-                    // Example: 'It''s a test'
+                    // Example: 'It''s a test'.
                     if byte == delim {
                         let next = iter.next();
                         assert_eq!(*next.unwrap(), delim)
@@ -676,7 +676,7 @@ impl<'a> Iterator for DequotedIter<'a> {
 //     106 & 0x0f = 10 ✓
 //
 // For letters 'A'-'F' (ASCII 65-70)
-//     h >> 6 = 65 >> 6 = 1 (65 in binary: 01000001
+//     h >> 6 = 65 >> 6 = 1 (65 in binary: 01000001)
 //     1 & 1 = 1
 //     9 * 1 = 9
 //     h += 9 → converts to correct value
