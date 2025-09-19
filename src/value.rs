@@ -276,7 +276,7 @@ fn real_to_int(f: f64) -> i64 {
     }
 }
 
-/// sqlite3RealSameAsInt() in vdbemem.c of SQLite
+/// sqlite3RealSameAsInt() in vdbemem.c of SQLite.
 fn is_real_same_as_int(f: f64, i: i64) -> bool {
     let fi = i as f64;
     // TODO: Why this range -2251799813685248..2251799813685248 = -2^51..2^51?

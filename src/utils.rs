@@ -603,7 +603,7 @@ impl MaybeQuotedBytes<'_> {
                     result.push(byte)
                 }
                 result
-            }
+            },
             _ => self.0.to_vec(),
         }
     }
